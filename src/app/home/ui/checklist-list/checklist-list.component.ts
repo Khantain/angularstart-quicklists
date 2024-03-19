@@ -1,20 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Checklist } from '../../../shared/interfaces/ichecklist';
 
 @Component({
   standalone: true,
   selector: 'app-checklist-list',
-  template: `
-    <ul>
-      @for (checklist of checklists; track checklist.id){
-      <li>
-        {{ checklist.title }}
-      </li>
-      } @empty {
-      <p>Click the add button to create your first checklist!</p>
-      }
-    </ul>
-  `,
+  imports: [RouterLink],
+  templateUrl: './checklist-list.component.html',
 })
 export class ChecklistListComponent {
   @Input({ required: true }) checklists!: Checklist[];
