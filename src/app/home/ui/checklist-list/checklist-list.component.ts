@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Checklist } from '../../../shared/interfaces/ichecklist';
+import { Checklist, RemoveChecklist } from '../../../shared/interfaces/ichecklist';
 
 @Component({
   standalone: true,
@@ -10,4 +10,6 @@ import { Checklist } from '../../../shared/interfaces/ichecklist';
 })
 export class ChecklistListComponent {
   @Input({ required: true }) checklists!: Checklist[];
+  @Output() delete = new EventEmitter<RemoveChecklist>();
+  @Output() edit = new EventEmitter<Checklist>();
 }

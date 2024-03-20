@@ -22,14 +22,22 @@ import { ChecklistListComponent } from './ui/checklist-list/checklist-list.compo
           [title]="checklistBeingEdited()?.title || 'Add Checklist'"
           [formGroup]="checklistForm"
           (close)="checklistBeingEdited.set(null)"
-          (save)="checklistService.add$.next(checklistForm.getRawValue())"
+          (save)="checklistBeingEdited()?.id ? checklistService.edit$.next({
+              id: checklistBeingEdited()!.id!,
+              data: checklistForm.getRawValue()
+            })
+          : checklistService.add$.next(checklistForm.getRawValue())"
         />
       </ng-template>
     </app-modal>
 
     <section>
       <h2>Your checklists</h2>
-      <app-checklist-list [checklists]="checklistService.checklists()" />
+      <app-checklist-list 
+        [checklists]="checklistService.checklists()"         
+        (delete)="checklistService.remove$.next($event)"
+        (edit)="checklistBeingEdited.set($event)"
+      />
     </section>
   `,
 })
@@ -43,8 +51,14 @@ export default class HomeComponent {
 
   constructor() {
     effect(() => {
-      if (!this.checklistBeingEdited()) {
+      const checklist = this.checklistBeingEdited();
+
+      if (!checklist) {
         this.checklistForm.reset();
+      } else {
+        this.checklistForm.patchValue({
+          title: checklist.title,
+        });
       }
     });
   }
